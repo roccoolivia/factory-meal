@@ -80,8 +80,6 @@ tr:hover td{background:var(--bg);}
 </head>
 <body>
 
-<script src="config.js"></script>
-
 <div class="topbar">
   <div class="topbar-left">
     <div class="topbar-logo">🍱</div>
@@ -175,24 +173,23 @@ const MENU=[
   {id:33,emoji:'🍗',zh:'鸡翅',en:'Chicken Wing',es:'Alitas de Pollo',cat:'other'},
 ];
 
+const SUPABASE_URL='https://xgoayuzekbsusyraecfx.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnb2F5dXpla2JzdXN5cmFlY2Z4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDkxODMsImV4cCI6MjA4ODQyNTE4M30.yIN4_xhpMJGndQAxTTTRY3e3JL-IFXN6UQbnOqakf3o';
+
 let allOrders=[];
 let currentTab='summary';
 let manualSel=[];
 
-function todayKey(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function todayKey(){return new Date().toLocaleDateString('zh-CN');}
 
 function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 
 async function loadOrders(){
   document.getElementById('loading-overlay').classList.add('show');
   try{
-    const today=todayKey();
-    const res=await fetch(SUPABASE_URL+'/rest/v1/orders?date=eq.'+today+'&order=time.asc',{
-      headers:{
-        'Content-Type':'application/json',
-        'apikey':SUPABASE_KEY,
-        'Authorization':'Bearer '+SUPABASE_KEY
-      }
+    const today=new Date().toLocaleDateString('zh-CN');
+    const res=await fetch(SUPABASE_URL+'/rest/v1/orders?date=eq.'+encodeURIComponent(today)+'&order=created_at.asc',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
     });
     if(!res.ok)throw new Error('加载失败');
     const rows=await res.json();
@@ -298,7 +295,7 @@ async function deleteOrder(idx){
 
 async function clearToday(){
   if(!confirm('确定清空今日所有订单？此操作不可撤销。'))return;
-  await fetch(SUPABASE_URL+'/rest/v1/orders?date=eq.'+todayKey(),{
+  await fetch(SUPABASE_URL+'/rest/v1/orders?date=eq.'+encodeURIComponent(todayKey()),{
     method:'DELETE',
     headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
   });
