@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>点餐管理后台</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+:root{--primary:#e85d26;--bg:#f5f3f0;--white:#fff;--border:#e5e0d8;--text:#1a1a1a;--text2:#666;--text3:#999;--green:#16a34a;--shadow:0 2px 12px rgba(0,0,0,.07);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-serif;min-height:100vh;}
+.topbar{background:var(--primary);color:white;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(232,93,38,.25);position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:10px;}
+.topbar-logo{font-size:22px;}
+.tb-title{font-size:17px;font-weight:700;}
+.tb-sub{font-size:11px;opacity:.8;margin-top:1px;}
+.tb-right{display:flex;align-items:center;gap:8px;}
+.time-badge{background:rgba(255,255,255,.2);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:500;}
+.btn{border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:500;transition:all .2s;}
+.btn-white{background:rgba(255,255,255,.2);color:white;}.btn-white:hover{background:rgba(255,255,255,.35);}
+.btn-green{background:var(--green);color:white;}.btn-green:hover{filter:brightness(1.1);}
+.btn-red{background:#dc2626;color:white;}.btn-red:hover{filter:brightness(1.1);}
+.btn-purple{background:#7c3aed;color:white;}.btn-purple:hover{filter:brightness(1.1);}
+.content{padding:16px 20px;max-width:960px;margin:0 auto;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.stat{background:white;border-radius:12px;padding:14px 16px;box-shadow:var(--shadow);}
+.stat-val{font-size:28px;font-weight:700;color:var(--primary);}
+.stat-lbl{font-size:12px;color:var(--text2);margin-top:3px;}
+.admin-bar{background:white;border-radius:12px;padding:13px 18px;box-shadow:var(--shadow);margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.admin-status{font-size:13px;color:var(--text2);flex:1;min-width:180px;}
+.status-open{color:var(--green);font-weight:600;}
+.status-closed{color:#dc2626;font-weight:600;}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:14px;}
+.tab{padding:9px 16px;font-size:13px;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-weight:500;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+.card{background:white;border-radius:13px;box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;}
+.card-h{padding:13px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-t{font-size:14px;font-weight:700;}
+.card-b{padding:14px 18px;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;font-size:11px;color:var(--text3);letter-spacing:1px;padding:6px 10px;border-bottom:2px solid var(--border);}
+td{padding:10px 10px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--bg);}
+.count-badge{background:var(--primary);color:white;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;}
+.count-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;flex:1;}
+.count-fill{height:100%;background:var(--primary);border-radius:3px;}
+.special-note{font-size:11px;color:#7c3aed;background:#f3f0ff;border-radius:4px;padding:2px 7px;display:inline-block;margin-top:3px;}
+.restaurant-box{background:#fff8f0;border:2px solid var(--primary);border-radius:13px;padding:16px;margin-bottom:14px;}
+.restaurant-box-title{font-size:14px;font-weight:700;color:var(--primary);margin-bottom:12px;}
+.ri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.ri-card{background:white;border-radius:10px;padding:12px 14px;border:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.ri-emoji{font-size:22px;flex-shrink:0;}
+.ri-name{font-size:13px;font-weight:500;}
+.ri-name-en{font-size:10px;color:var(--text3);}
+.ri-count{margin-left:auto;background:var(--primary);color:white;font-size:16px;font-weight:700;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.empty{text-align:center;padding:40px;color:var(--text3);}
+.empty-icon{font-size:36px;margin-bottom:10px;}
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.8);z-index:200;align-items:center;justify-content:center;}
+.loading-overlay.show{display:flex;}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* Manual add modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:center;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:white;border-radius:16px;padding:22px;width:440px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;}
+.form-group{margin-bottom:12px;}
+.form-label{font-size:11px;color:var(--text2);display:block;margin-bottom:5px;}
+.form-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 11px;font-size:13px;outline:none;font-family:inherit;}
+.form-input:focus{border-color:var(--primary);}
+.mini-menu{display:grid;grid-template-columns:1fr 1fr;gap:5px;max-height:260px;overflow-y:auto;}
+.mini-item{padding:7px 9px;border:1.5px solid var(--border);border-radius:7px;cursor:pointer;font-size:12px;transition:all .15s;}
+.mini-item.sel{background:#fff3ee;border-color:var(--primary);color:var(--primary);}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+@media(max-width:600px){.stats{grid-template-columns:1fr 1fr;}.ri-grid{grid-template-columns:1fr 1fr;}}
+@media print{.topbar,.tabs,.admin-bar,.btn,.modal-bg{display:none!important;}.card{box-shadow:none;border:1px solid #ddd;}}
+</style>
+</head>
+<body>
+
+<script src="config.js"></script>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">🍱</div>
+    <div><div class="tb-title">点餐管理后台</div><div class="tb-sub">文员 · 管理员视图</div></div>
+  </div>
+  <div class="tb-right">
+    <div class="time-badge" id="clock">--:--</div>
+    <button class="btn btn-white" onclick="loadOrders()">🔄 刷新</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="stats">
+    <div class="stat"><div class="stat-val" id="stat-people">0</div><div class="stat-lbl">今日点餐人数</div></div>
+    <div class="stat"><div class="stat-val" id="stat-dishes">0</div><div class="stat-lbl">菜品种类</div></div>
+    <div class="stat"><div class="stat-val" id="stat-total">0</div><div class="stat-lbl">总份数</div></div>
+    <div class="stat"><div class="stat-val" id="stat-status" style="color:var(--green);font-size:16px;">加载中</div><div class="stat-lbl" id="stat-lbl">--</div></div>
+  </div>
+
+  <div class="admin-bar">
+    <div class="admin-status">📋 今日 <span id="today-date"></span> · <span id="open-status" class="status-open">加载中...</span></div>
+    <button class="btn btn-purple" onclick="openAddModal()">+ 手动添加</button>
+    <button class="btn btn-green" onclick="window.print()">🖨️ 打印</button>
+    <button class="btn btn-red" onclick="clearToday()">🗑️ 清空今日</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('summary',this)">📊 汇总</div>
+    <div class="tab" onclick="switchTab('workers',this)">👥 员工明细</div>
+    <div class="tab" onclick="switchTab('restaurant',this)">🍽️ 餐馆视图</div>
+  </div>
+
+  <div id="tab-summary"></div>
+  <div id="tab-workers" style="display:none;"></div>
+  <div id="tab-restaurant" style="display:none;"></div>
+</div>
+
+<div class="loading-overlay" id="loading-overlay"><div class="spinner"></div></div>
+
+<!-- Add modal -->
+<div class="modal-bg" id="add-modal">
+  <div class="modal">
+    <div class="modal-title">+ 手动添加订单</div>
+    <div class="form-group"><label class="form-label">员工姓名</label><input class="form-input" id="m-name" placeholder="输入姓名"></div>
+    <div class="form-group">
+      <label class="form-label">选择菜品</label>
+      <div class="mini-menu" id="mini-menu"></div>
+    </div>
+    <div class="form-group"><label class="form-label">特殊要求</label><input class="form-input" id="m-special" placeholder="可选"></div>
+    <div class="modal-actions">
+      <button class="btn" style="background:var(--bg);border:1px solid var(--border);" onclick="closeAddModal()">取消</button>
+      <button class="btn" style="background:var(--primary);color:white;" onclick="submitManual()">确认添加</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MENU=[
+  {id:1,emoji:'🍜',zh:'炒面',en:'Chow Mein',es:'Chow Mein',cat:'noodle'},
+  {id:2,emoji:'🍝',zh:'捞面',en:'Lo Mein',es:'Lo Mein',cat:'noodle'},
+  {id:3,emoji:'🥚',zh:'芙蓉蛋',en:'Egg Foo Young',es:'Egg Foo Young',cat:'other'},
+  {id:4,emoji:'🍗',zh:'甜酸鸡',en:'Sweet & Sour Chicken',es:'Pollo Agridulce',cat:'chicken'},
+  {id:5,emoji:'🥦',zh:'西兰花炒鸡',en:'Chicken w. Broccoli',es:'Pollo con Brócoli',cat:'chicken'},
+  {id:6,emoji:'🥬',zh:'杂菜炒鸡',en:'Chicken w. Mixed Veg',es:'Pollo con Verduras',cat:'chicken'},
+  {id:7,emoji:'🫘',zh:'黑豆酱鸡',en:'Chicken w. Black Bean Sauce',es:'Pollo Frijol Negro',cat:'chicken'},
+  {id:8,emoji:'🥜',zh:'腰果鸡',en:'Chicken w. Cashew Nuts',es:'Pollo con Anacardos',cat:'chicken'},
+  {id:9,emoji:'🫛',zh:'四季豆炒鸡',en:'Chicken w. String Beans',es:'Pollo con Habichuelas',cat:'chicken'},
+  {id:10,emoji:'🍗',zh:'芝麻鸡',en:'Sesame Chicken',es:'Pollo de Sésamo',cat:'chicken'},
+  {id:11,emoji:'🌶️',zh:'左宗棠/橙汁鸡',en:"General Tso's / Orange Chicken",es:'General Tso/Naranja',cat:'chicken',spicy:true},
+  {id:12,emoji:'🧄',zh:'蒜香鸡',en:'Chicken in Garlic Sauce',es:'Pollo Salsa Ajo',cat:'chicken',spicy:true},
+  {id:13,emoji:'🥜',zh:'宫保鸡丁',en:'Kung Pao Chicken',es:'Kung Pao Pollo',cat:'chicken',spicy:true},
+  {id:14,emoji:'🌶️',zh:'四川/湖南鸡',en:'Szechuan / Hunan Chicken',es:'Pollo Szechuan/Hunan',cat:'chicken',spicy:true},
+  {id:15,emoji:'🥦',zh:'西兰花炒叉烧',en:'Roast Pork w. Broccoli',es:'Cerdo Brócoli',cat:'pork'},
+  {id:16,emoji:'🥬',zh:'杂菜炒叉烧',en:'Roast Pork w. Mixed Veg',es:'Cerdo Verduras',cat:'pork'},
+  {id:17,emoji:'🍖',zh:'无骨排骨',en:'Boneless Spare Ribs',es:'Costillas sin Hueso',cat:'pork'},
+  {id:18,emoji:'🍖',zh:'BBQ排骨',en:'BBQ Spare Ribs',es:'Costillas BBQ',cat:'pork'},
+  {id:19,emoji:'🥦',zh:'西兰花炒牛肉',en:'Beef w. Broccoli',es:'Res con Brócoli',cat:'beef'},
+  {id:20,emoji:'🥬',zh:'杂菜炒牛肉',en:'Beef w. Mixed Veg',es:'Res con Verduras',cat:'beef'},
+  {id:21,emoji:'🧅',zh:'洋葱椒盐牛肉',en:'Pepper Steak w. Onion',es:'Bistec con Cebolla',cat:'beef'},
+  {id:22,emoji:'🫛',zh:'四季豆炒牛肉',en:'Beef w. String Bean',es:'Res con Habichuelas',cat:'beef'},
+  {id:23,emoji:'🧄',zh:'蒜香牛肉',en:'Beef w. Garlic Sauce',es:'Res Salsa Ajo',cat:'beef',spicy:true},
+  {id:24,emoji:'🌶️',zh:'四川/湖南牛肉',en:'Szechuan / Hunan Beef',es:'Res Szechuan/Hunan',cat:'beef',spicy:true},
+  {id:25,emoji:'🥦',zh:'西兰花炒虾',en:'Shrimp w. Broccoli',es:'Camarones Brócoli',cat:'shrimp'},
+  {id:26,emoji:'🥬',zh:'杂菜炒虾',en:'Shrimp w. Mixed Veg',es:'Camarones Verduras',cat:'shrimp'},
+  {id:27,emoji:'🦞',zh:'龙虾酱炒虾',en:'Shrimp w. Lobster Sauce',es:'Camarones Langosta',cat:'shrimp'},
+  {id:28,emoji:'🫛',zh:'四季豆炒虾',en:'Shrimp w. String Bean',es:'Camarones Habichuelas',cat:'shrimp'},
+  {id:29,emoji:'🧄',zh:'蒜香虾',en:'Shrimp w. Garlic Sauce',es:'Camarones Salsa Ajo',cat:'shrimp',spicy:true},
+  {id:30,emoji:'🥜',zh:'宫保虾',en:'Kung Po Shrimp',es:'Kung Po Camarones',cat:'shrimp',spicy:true},
+  {id:31,emoji:'🥦',zh:'素炒杂菜',en:'Mixed Vegetable',es:'Verduras Mixtas',cat:'veg'},
+  {id:32,emoji:'🥦',zh:'西兰花/蒜香西兰花',en:'Broccoli w. Brown/Garlic Sauce',es:'Brócoli en Salsa',cat:'veg'},
+  {id:33,emoji:'🍗',zh:'鸡翅',en:'Chicken Wing',es:'Alitas de Pollo',cat:'other'},
+];
+
+let allOrders=[];
+let currentTab='summary';
+let manualSel=[];
+
+function todayKey(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+
+function updateClock(){const n=new Date();document.getElementById('clock').textContent=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
+
+async function loadOrders(){
+  document.getElementById('loading-overlay').classList.add('show');
+  try{
+    if(SUPABASE_URL==='YOUR_SUPABASE_URL'){
+      allOrders=JSON.parse(localStorage.getItem('factory_orders_'+todayKey())||'[]');
+    }else{
+      const today=todayKey();
+      const res=await fetch(`${SUPABASE_URL}/rest/v1/orders?order_date=eq.${today}&order=order_time.asc`,{headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      if(!res.ok)throw new Error('加载失败');
+      const data=await res.json();
+      allOrders=data.map(row=>({...row,items:typeof row.items==='string'?JSON.parse(row.items):row.items}));
+    }
+  }catch(e){alert('加载失败: '+e.message);}
+  document.getElementById('loading-overlay').classList.remove('show');
+  renderAll();
+}
+
+function renderAll(){
+  updateStats();
+  updateDateStatus();
+  if(currentTab==='summary')renderSummary();
+  else if(currentTab==='workers')renderWorkers();
+  else renderRestaurant();
+}
+
+function updateStats(){
+  const counts={};
+  let total=0;
+  allOrders.forEach(o=>(o.items||[]).forEach(i=>{counts[i.id]=(counts[i.id]||0)+1;total++;}));
+  document.getElementById('stat-people').textContent=allOrders.length;
+  document.getElementById('stat-dishes').textContent=Object.keys(counts).length;
+  document.getElementById('stat-total').textContent=total;
+}
+
+function updateDateStatus(){
+  const today=new Date();
+  const d=`${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`;
+  document.getElementById('today-date').textContent=d;
+  document.getElementById('stat-status').textContent=allOrders.length+'人';
+  document.getElementById('stat-lbl').textContent='今日已点餐';
+  document.getElementById('open-status').textContent='点餐系统运行中';
+  document.getElementById('open-status').className='status-open';
+}
+
+function renderSummary(){
+  const counts={};
+  allOrders.forEach(o=>(o.items||[]).forEach(i=>{counts[i.id]=(counts[i.id]||0)+1;}));
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const max=sorted.length?sorted[0][1]:1;
+  const el=document.getElementById('tab-summary');
+  if(!sorted.length){el.innerHTML=`<div class="empty"><div class="empty-icon">🍽️</div>还没有人点餐</div>`;return;}
+  el.innerHTML=`<div class="card"><div class="card-h"><div class="card-t">📊 菜品汇总（共${allOrders.length}人）</div></div><div class="card-b"><table><thead><tr><th>菜品</th><th>份数</th><th style="width:180px">占比</th></tr></thead><tbody>${
+    sorted.map(([id,cnt])=>{
+      const item=MENU.find(m=>m.id==id);if(!item)return'';
+      const pct=allOrders.length?Math.round((cnt/allOrders.length)*100):0;
+      return`<tr><td><span style="font-size:18px;margin-right:7px;">${item.emoji}</span>${item.zh}<div style="font-size:10px;color:var(--text3);">${item.en}</div></td><td><div class="count-badge">${cnt}</div></td><td><div style="display:flex;align-items:center;gap:8px;"><div class="count-bar"><div class="count-fill" style="width:${(cnt/max)*100}%"></div></div><span style="font-size:11px;color:var(--text3);width:30px;">${pct}%</span></div></td></tr>`;
+    }).join('')
+  }</tbody></table></div></div>`;
+}
+
+function renderWorkers(){
+  const el=document.getElementById('tab-workers');
+  if(!allOrders.length){el.innerHTML=`<div class="empty"><div class="empty-icon">👥</div>还没有员工点餐</div>`;return;}
+  el.innerHTML=`<div class="card"><div class="card-h"><div class="card-t">👥 员工点餐明细</div><div style="font-size:12px;color:var(--text3);">共${allOrders.length}人</div></div><div class="card-b"><table><thead><tr><th>姓名</th><th>菜品</th><th>时间</th><th>操作</th></tr></thead><tbody>${
+    allOrders.map((o,idx)=>`<tr><td style="font-weight:500;">${o.worker_name}</td><td><div style="font-size:12px;color:var(--text2);line-height:1.7;">${(o.items||[]).map(i=>i.emoji+' '+i.zh).join('、')}</div>${o.special?`<div class="special-note">💬 ${o.special}</div>`:''}</td><td style="font-size:11px;font-family:monospace;color:var(--text3);">${o.order_time||'--'}</td><td><button onclick="deleteOrder(${idx})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:5px;padding:3px 9px;cursor:pointer;font-size:11px;">删除</button></td></tr>`)
+    .join('')
+  }</tbody></table></div></div>`;
+}
+
+function renderRestaurant(){
+  const counts={};
+  allOrders.forEach(o=>(o.items||[]).forEach(i=>{counts[i.id]=(counts[i.id]||0)+1;}));
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const el=document.getElementById('tab-restaurant');
+  if(!sorted.length){el.innerHTML=`<div class="empty"><div class="empty-icon">📋</div>暂无订单</div>`;return;}
+  const totalItems=Object.values(counts).reduce((a,b)=>a+b,0);
+  const specials=allOrders.filter(o=>o.special);
+  el.innerHTML=`<div class="restaurant-box"><div class="restaurant-box-title">🍽️ 制作清单 · ${new Date().toLocaleDateString('zh-CN')}</div><div class="ri-grid">${
+    sorted.map(([id,cnt])=>{const item=MENU.find(m=>m.id==id);if(!item)return'';return`<div class="ri-card"><div class="ri-emoji">${item.emoji}</div><div><div class="ri-name">${item.zh}</div><div class="ri-name-en">${item.en}</div></div><div class="ri-count">${cnt}</div></div>`;}).join('')
+  }</div><div style="margin-top:12px;padding:10px;background:white;border-radius:8px;font-size:13px;color:var(--text2);">合计：<strong style="color:var(--primary);">${totalItems} 份</strong> · <strong>${allOrders.length} 人</strong>${specials.length?` · <span style="color:#7c3aed;">特殊要求 ${specials.length} 条</span>`:''}</div>${specials.length?`<div style="margin-top:8px;background:white;border-radius:8px;padding:10px;font-size:12px;color:#7c3aed;"><strong>特殊要求：</strong><br>${specials.map(o=>`${o.worker_name}: ${o.special}`).join('<br>')}</div>`:''}</div>`;
+}
+
+function switchTab(tab,el){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['summary','workers','restaurant'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  renderAll();
+}
+
+async function deleteOrder(idx){
+  if(!confirm('确定删除这条订单？'))return;
+  const o=allOrders[idx];
+  if(SUPABASE_URL==='YOUR_SUPABASE_URL'){
+    const orders=JSON.parse(localStorage.getItem('factory_orders_'+todayKey())||'[]');
+    orders.splice(idx,1);localStorage.setItem('factory_orders_'+todayKey(),JSON.stringify(orders));
+    await loadOrders();
+  }else if(o.id){
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?id=eq.${o.id}`,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    await loadOrders();
+  }
+}
+
+async function clearToday(){
+  if(!confirm('确定清空今日所有订单？此操作不可撤销。'))return;
+  if(SUPABASE_URL==='YOUR_SUPABASE_URL'){
+    localStorage.removeItem('factory_orders_'+todayKey());
+  }else{
+    await fetch(`${SUPABASE_URL}/rest/v1/orders?order_date=eq.${todayKey()}`,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+  }
+  await loadOrders();
+}
+
+// Manual add
+function openAddModal(){
+  manualSel=[];
+  document.getElementById('mini-menu').innerHTML=MENU.map(m=>`<div class="mini-item" id="mm-${m.id}" onclick="toggleMini(${m.id},this)">${m.emoji} ${m.zh}</div>`).join('');
+  document.getElementById('add-modal').classList.add('open');
+}
+function closeAddModal(){document.getElementById('add-modal').classList.remove('open');}
+function toggleMini(id,el){const idx=manualSel.indexOf(id);if(idx>=0){manualSel.splice(idx,1);el.classList.remove('sel');}else{manualSel.push(id);el.classList.add('sel');}}
+
+async function submitManual(){
+  const name=document.getElementById('m-name').value.trim();
+  const special=document.getElementById('m-special').value.trim();
+  if(!name){alert('请输入姓名');return;}
+  if(!manualSel.length){alert('请选择菜品');return;}
+  const items=manualSel.map(id=>MENU.find(m=>m.id===id));
+  const now=new Date();
+  const timeStr=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  if(SUPABASE_URL==='YOUR_SUPABASE_URL'){
+    const orders=JSON.parse(localStorage.getItem('factory_orders_'+todayKey())||'[]');
+    orders.push({id:Date.now()+'',worker_name:name,items,special:special||null,order_time:timeStr,order_date:todayKey(),lang:'zh'});
+    localStorage.setItem('factory_orders_'+todayKey(),JSON.stringify(orders));
+  }else{
+    await fetch(`${SUPABASE_URL}/rest/v1/orders`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=minimal'},body:JSON.stringify({worker_name:name,items:JSON.stringify(items),special:special||null,order_time:timeStr,order_date:todayKey(),lang:'zh'})});
+  }
+  closeAddModal();
+  document.getElementById('m-name').value='';document.getElementById('m-special').value='';
+  await loadOrders();
+}
+
+document.getElementById('add-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeAddModal();});
+setInterval(updateClock,1000);
+setInterval(loadOrders,30000);
+updateClock();
+loadOrders();
+
+// set today date display
+const td=new Date();
+document.getElementById('today-date').textContent=`${td.getFullYear()}/${td.getMonth()+1}/${td.getDate()}`;
+</script>
+</body>
+</html>
