@@ -1,0 +1,11 @@
+{
+  "buildCommand": "node build-config.js",
+  "outputDirectory": ".",
+  "framework": null,
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/worker", "destination": "/工厂点餐_工人版_v2.html" },
+    { "source": "/kitchen", "destination": "/工厂点餐_餐馆视图_v2.html" },
+    { "source": "/admin", "destination": "/工厂点餐_文员后台_v2.html" }
+  ]
+}
