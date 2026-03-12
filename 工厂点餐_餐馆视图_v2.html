@@ -139,8 +139,20 @@ async function load(){
   ${specials.length?`<div class="special-box"><div class="special-title">⚠️ 特殊要求 · Special Requests</div>${specials.map(o=>`<div class="special-item"><strong>${o.name}</strong>：${o.note}</div>`).join('')}</div>`:''}`;
 }
 
+async function init(){
+  const now=new Date();
+  const totalMin=now.getHours()*60+now.getMinutes();
+  if(totalMin>=1380){
+    const today=new Date().toLocaleDateString('zh-CN');
+    await fetch(SUPABASE_URL+'/rest/v1/orders?date=eq.'+encodeURIComponent(today),{
+      method:'DELETE',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+  }
+  await load();
+}
 setInterval(load,30000);
-load();
+init();
 </script>
 </body>
 </html>
