@@ -137,40 +137,48 @@ tr:hover td{background:var(--bg);}
 </div>
 
 <script>
+function fmtItem(i){const m=MENU.find(x=>x.zh===i.meal);return m&&m.code?`[${m.code}] ${i.meal}`:i.emoji+' '+i.meal;}
 const MENU=[
-  {id:1,emoji:'🍜',zh:'炒面',en:'Chow Mein',es:'Chow Mein',cat:'noodle'},
-  {id:2,emoji:'🍝',zh:'捞面',en:'Lo Mein',es:'Lo Mein',cat:'noodle'},
-  {id:3,emoji:'🥚',zh:'芙蓉蛋',en:'Egg Foo Young',es:'Egg Foo Young',cat:'other'},
-  {id:4,emoji:'🍗',zh:'甜酸鸡',en:'Sweet & Sour Chicken',es:'Pollo Agridulce',cat:'chicken'},
-  {id:5,emoji:'🥦',zh:'西兰花炒鸡',en:'Chicken w. Broccoli',es:'Pollo con Brócoli',cat:'chicken'},
-  {id:6,emoji:'🥬',zh:'什锦蔬菜鸡',en:'Chicken with Mixed Vegetable',es:'Pollo con Verduras',cat:'chicken'},
-  {id:7,emoji:'🫘',zh:'黑豆酱鸡',en:'Chicken w. Black Bean Sauce',es:'Pollo Frijol Negro',cat:'chicken'},
-  {id:8,emoji:'🥜',zh:'腰果鸡',en:'Chicken w. Cashew Nuts',es:'Pollo con Anacardos',cat:'chicken'},
-  {id:9,emoji:'🫛',zh:'四季豆炒鸡',en:'Chicken w. String Beans',es:'Pollo con Habichuelas',cat:'chicken'},
-  {id:10,emoji:'🍗',zh:'芝麻鸡（仅限白肉）',en:'Sesame Chicken (White Meat Only)',es:'Pollo de Sésamo',cat:'chicken'},
-  {id:11,emoji:'🌶️',zh:'左宗鸡/陈皮鸡（二选一，仅限白肉）',en:"General Tso's or Orange Chicken (White Meat Only)",es:'General Tso/Naranja',cat:'chicken',spicy:true},
-  {id:12,emoji:'🧄',zh:'蒜香鸡',en:'Chicken in Garlic Sauce',es:'Pollo Salsa Ajo',cat:'chicken',spicy:true},
-  {id:13,emoji:'🥜',zh:'宫保鸡（配花生，辣）',en:'Kung Pao Chicken with Peanuts',es:'Kung Pao Pollo',cat:'chicken',spicy:true},
-  {id:14,emoji:'🌶️',zh:'四川/湖南鸡',en:'Szechuan / Hunan Chicken',es:'Pollo Szechuan/Hunan',cat:'chicken',spicy:true},
-  {id:15,emoji:'🥦',zh:'西兰花炒叉烧',en:'Roast Pork w. Broccoli',es:'Cerdo Brócoli',cat:'pork'},
-  {id:16,emoji:'🥬',zh:'杂菜炒叉烧',en:'Roast Pork w. Mixed Veg',es:'Cerdo Verduras',cat:'pork'},
-  {id:17,emoji:'🍖',zh:'无骨排骨',en:'Boneless Spare Ribs',es:'Costillas sin Hueso',cat:'pork'},
-  {id:18,emoji:'🍖',zh:'BBQ排骨',en:'BBQ Spare Ribs',es:'Costillas BBQ',cat:'pork'},
-  {id:19,emoji:'🥦',zh:'西兰花炒牛肉',en:'Beef w. Broccoli',es:'Res con Brócoli',cat:'beef'},
-  {id:20,emoji:'🥬',zh:'什锦蔬菜牛肉',en:'Beef with Mixed Vegetable',es:'Res con Verduras',cat:'beef'},
-  {id:21,emoji:'🧅',zh:'青椒洋葱牛肉',en:'Pepper Steak with Onion',es:'Bistec con Cebolla',cat:'beef'},
-  {id:22,emoji:'🫛',zh:'四季豆炒牛肉',en:'Beef w. String Bean',es:'Res con Habichuelas',cat:'beef'},
-  {id:23,emoji:'🧄',zh:'蒜香牛肉',en:'Beef w. Garlic Sauce',es:'Res Salsa Ajo',cat:'beef',spicy:true},
-  {id:24,emoji:'🌶️',zh:'四川/湖南牛肉',en:'Szechuan / Hunan Beef',es:'Res Szechuan/Hunan',cat:'beef',spicy:true},
-  {id:25,emoji:'🥦',zh:'西兰花炒虾',en:'Shrimp w. Broccoli',es:'Camarones Brócoli',cat:'shrimp'},
-  {id:26,emoji:'🥬',zh:'什锦蔬菜虾',en:'Shrimp with Mixed Vegetable',es:'Camarones Verduras',cat:'shrimp'},
-  {id:27,emoji:'🦞',zh:'龙虾汁虾',en:'Shrimp with Lobster Sauce',es:'Camarones Langosta',cat:'shrimp'},
-  {id:28,emoji:'🫛',zh:'四季豆炒虾',en:'Shrimp w. String Bean',es:'Camarones Habichuelas',cat:'shrimp'},
-  {id:29,emoji:'🧄',zh:'蒜香虾',en:'Shrimp w. Garlic Sauce',es:'Camarones Salsa Ajo',cat:'shrimp',spicy:true},
-  {id:30,emoji:'🥜',zh:'宫保虾（配花生，辣）',en:'Kung Pao Shrimp with Peanuts',es:'Kung Po Camarones',cat:'shrimp',spicy:true},
-  {id:31,emoji:'🥦',zh:'什锦蔬菜',en:'Mixed Vegetable',es:'Verduras Mixtas',cat:'veg'},
-  {id:32,emoji:'🥦',zh:'西兰花（红烧汁/蒜汁）',en:'Broccoli with Brown Sauce or Garlic Sauce',es:'Brócoli en Salsa',cat:'veg'},
-  {id:33,emoji:'🍗',zh:'鸡翅+薯条',en:'Chicken Wing + French Fries',es:'Alitas de Pollo',cat:'other'},
+  {id:1,code:'L1',emoji:'🍜',zh:'炒面',en:'Chow Mein',es:'Chow Mein',cat:'noodle'},
+  {id:2,code:'L2',emoji:'🍝',zh:'捞面',en:'Lo Mein',es:'Lo Mein',cat:'noodle'},
+  {id:3,code:'L3',emoji:'🥚',zh:'芙蓉蛋',en:'Egg Foo Young',es:'Egg Foo Young',cat:'other'},
+  {id:4,code:'L4',emoji:'🍗',zh:'甜酸鸡',en:'Sweet & Sour Chicken',es:'Pollo Agridulce',cat:'chicken'},
+  {id:5,code:'L5',emoji:'🥦',zh:'西兰花炒鸡',en:'Chicken w. Broccoli',es:'Pollo con Brócoli',cat:'chicken'},
+  {id:6,code:'L6',emoji:'🥬',zh:'什锦蔬菜鸡',en:'Chicken with Mixed Vegetable',es:'Pollo con Verduras',cat:'chicken'},
+  {id:7,code:'L7',emoji:'🫘',zh:'黑豆酱鸡',en:'Chicken w. Black Bean Sauce',es:'Pollo Frijol Negro',cat:'chicken'},
+  {id:8,code:'L8',emoji:'🥜',zh:'腰果鸡',en:'Chicken w. Cashew Nuts',es:'Pollo con Anacardos',cat:'chicken'},
+  {id:9,code:'L9',emoji:'🫛',zh:'四季豆炒鸡',en:'Chicken w. String Beans',es:'Pollo con Habichuelas',cat:'chicken'},
+  {id:10,code:'L10',emoji:'🍗',zh:'芝麻鸡（仅限白肉）',en:'Sesame Chicken (White Meat Only)',es:'Pollo de Sésamo',cat:'chicken'},
+  {id:11,code:'L11',emoji:'🌶️',zh:'左宗鸡/陈皮鸡（二选一，仅限白肉）',en:"General Tso's or Orange Chicken (White Meat Only)",es:'General Tso/Naranja',cat:'chicken',spicy:true},
+  {id:12,code:'L12',emoji:'🧄',zh:'蒜香鸡',en:'Chicken in Garlic Sauce',es:'Pollo Salsa Ajo',cat:'chicken',spicy:true},
+  {id:13,code:'L13',emoji:'🥜',zh:'宫保鸡（配花生，辣）',en:'Kung Pao Chicken with Peanuts',es:'Kung Pao Pollo',cat:'chicken',spicy:true},
+  {id:14,code:'L14',emoji:'🌶️',zh:'四川/湖南鸡',en:'Szechuan / Hunan Chicken',es:'Pollo Szechuan/Hunan',cat:'chicken',spicy:true},
+  {id:15,code:'L15',emoji:'🥦',zh:'西兰花炒叉烧',en:'Roast Pork w. Broccoli',es:'Cerdo Brócoli',cat:'pork'},
+  {id:16,code:'L16',emoji:'🥬',zh:'杂菜炒叉烧',en:'Roast Pork w. Mixed Veg',es:'Cerdo Verduras',cat:'pork'},
+  {id:17,code:'L17',emoji:'🍖',zh:'无骨排骨',en:'Boneless Spare Ribs',es:'Costillas sin Hueso',cat:'pork'},
+  {id:18,code:'L18',emoji:'🍖',zh:'BBQ排骨',en:'BBQ Spare Ribs',es:'Costillas BBQ',cat:'pork'},
+  {id:19,code:'L19',emoji:'🥦',zh:'西兰花炒牛肉',en:'Beef w. Broccoli',es:'Res con Brócoli',cat:'beef'},
+  {id:20,code:'L20',emoji:'🥬',zh:'什锦蔬菜牛肉',en:'Beef with Mixed Vegetable',es:'Res con Verduras',cat:'beef'},
+  {id:21,code:'L21',emoji:'🧅',zh:'青椒洋葱牛肉',en:'Pepper Steak with Onion',es:'Bistec con Cebolla',cat:'beef'},
+  {id:22,code:'L22',emoji:'🫛',zh:'四季豆炒牛肉',en:'Beef w. String Bean',es:'Res con Habichuelas',cat:'beef'},
+  {id:23,code:'L23',emoji:'🧄',zh:'蒜香牛肉',en:'Beef w. Garlic Sauce',es:'Res Salsa Ajo',cat:'beef',spicy:true},
+  {id:24,code:'L24',emoji:'🌶️',zh:'四川/湖南牛肉',en:'Szechuan / Hunan Beef',es:'Res Szechuan/Hunan',cat:'beef',spicy:true},
+  {id:25,code:'L25',emoji:'🥦',zh:'西兰花炒虾',en:'Shrimp w. Broccoli',es:'Camarones Brócoli',cat:'shrimp'},
+  {id:26,code:'L26',emoji:'🥬',zh:'什锦蔬菜虾',en:'Shrimp with Mixed Vegetable',es:'Camarones Verduras',cat:'shrimp'},
+  {id:27,code:'L27',emoji:'🦞',zh:'龙虾汁虾',en:'Shrimp with Lobster Sauce',es:'Camarones Langosta',cat:'shrimp'},
+  {id:28,code:'L28',emoji:'🫛',zh:'四季豆炒虾',en:'Shrimp w. String Bean',es:'Camarones Habichuelas',cat:'shrimp'},
+  {id:29,code:'L29',emoji:'🧄',zh:'蒜香虾',en:'Shrimp w. Garlic Sauce',es:'Camarones Salsa Ajo',cat:'shrimp',spicy:true},
+  {id:30,code:'L30',emoji:'🥜',zh:'宫保虾（配花生，辣）',en:'Kung Pao Shrimp with Peanuts',es:'Kung Po Camarones',cat:'shrimp',spicy:true},
+  {id:31,code:'L31',emoji:'🥦',zh:'什锦蔬菜',en:'Mixed Vegetable',es:'Verduras Mixtas',cat:'veg'},
+  {id:32,code:'L32',emoji:'🥦',zh:'西兰花（红烧汁/蒜汁）',en:'Broccoli with Brown Sauce or Garlic Sauce',es:'Brócoli en Salsa',cat:'veg'},
+  {id:33,code:'L33',emoji:'🍗',zh:'鸡翅+薯条',en:'Chicken Wing + French Fries',es:'Alitas de Pollo',cat:'other'},
+  {id:34,code:'',emoji:'🥤',zh:'可乐',en:'Coke',es:'Coca-Cola',cat:'drink'},
+  {id:35,code:'',emoji:'🥤',zh:'雪碧',en:'Sprite',es:'Sprite',cat:'drink'},
+  {id:36,code:'',emoji:'🥤',zh:'芬达',en:'Fanta',es:'Fanta',cat:'drink'},
+  {id:37,code:'',emoji:'🧋',zh:'冰茶',en:'Ice Tea',es:'Té Helado',cat:'drink'},
+  {id:38,code:'',emoji:'🍜',zh:'酸辣汤',en:'Hot & Sour Soup',es:'Sopa Agridulce',cat:'drink'},
+  {id:39,code:'',emoji:'🍳',zh:'蛋花汤',en:'Egg Drop Soup',es:'Sopa de Huevo',cat:'drink'},
+  {id:40,code:'',emoji:'🍵',zh:'味噌汤',en:'Miso Soup',es:'Sopa Miso',cat:'drink'},
 ];
 
 const SUPABASE_URL='https://xgoayuzekbsusyraecfx.supabase.co';
@@ -244,7 +252,7 @@ function renderSummary(){
     sorted.map(([meal,cnt])=>{
       const item=MENU.find(m=>m.zh===meal);if(!item)return'';
       const pct=allOrders.length?Math.round((cnt/allOrders.length)*100):0;
-      return`<tr><td><span style="font-size:18px;margin-right:7px;">${item.emoji}</span>${meal}<div style="font-size:10px;color:var(--text3);">${item.en}</div></td><td><div class="count-badge">${cnt}</div></td><td><div style="display:flex;align-items:center;gap:8px;"><div class="count-bar"><div class="count-fill" style="width:${(cnt/max)*100}%"></div></div><span style="font-size:11px;color:var(--text3);width:30px;">${pct}%</span></div></td></tr>`;
+      return`<tr><td><span style="font-size:18px;margin-right:7px;">${item.emoji}</span>${item.code?`[${item.code}] `:''}${meal}<div style="font-size:10px;color:var(--text3);">${item.en}</div></td><td><div class="count-badge">${cnt}</div></td><td><div style="display:flex;align-items:center;gap:8px;"><div class="count-bar"><div class="count-fill" style="width:${(cnt/max)*100}%"></div></div><span style="font-size:11px;color:var(--text3);width:30px;">${pct}%</span></div></td></tr>`;
     }).join('')
   }</tbody></table></div></div>`;
 }
@@ -253,7 +261,7 @@ function renderWorkers(){
   const el=document.getElementById('tab-workers');
   if(!allOrders.length){el.innerHTML=`<div class="empty"><div class="empty-icon">👥</div>还没有员工点餐</div>`;return;}
   el.innerHTML=`<div class="card"><div class="card-h"><div class="card-t">👥 员工点餐明细</div><div style="font-size:12px;color:var(--text3);">共${allOrders.length}人</div></div><div class="card-b"><table><thead><tr><th>姓名</th><th>菜品</th><th>时间</th><th>操作</th></tr></thead><tbody>${
-    allOrders.map((o,idx)=>`<tr><td style="font-weight:500;">${o.name}</td><td><div style="font-size:12px;color:var(--text2);line-height:1.7;">${(o.items||[]).map(i=>i.emoji+' '+i.meal).join('、')}</div>${o.note?`<div class="special-note">💬 ${o.note}</div>`:''}</td><td style="font-size:11px;font-family:monospace;color:var(--text3);">${o.time||'--'}</td><td><button onclick="deleteOrder(${idx})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:5px;padding:3px 9px;cursor:pointer;font-size:11px;">删除</button></td></tr>`)
+    allOrders.map((o,idx)=>`<tr><td style="font-weight:500;">${o.name}</td><td><div style="font-size:12px;color:var(--text2);line-height:1.7;">${(o.items||[]).map(i=>fmtItem(i)).join('、')}</div>${o.note?`<div class="special-note">💬 ${o.note}</div>`:''}</td><td style="font-size:11px;font-family:monospace;color:var(--text3);">${o.time||'--'}</td><td><button onclick="deleteOrder(${idx})" style="background:#fee2e2;color:#dc2626;border:none;border-radius:5px;padding:3px 9px;cursor:pointer;font-size:11px;">删除</button></td></tr>`)
     .join('')
   }</tbody></table></div></div>`;
 }
@@ -267,7 +275,7 @@ function renderRestaurant(){
   const totalItems=Object.values(counts).reduce((a,b)=>a+b,0);
   const specials=allOrders.filter(o=>o.note);
   el.innerHTML=`<div class="restaurant-box"><div class="restaurant-box-title">🍽️ 制作清单 · ${new Date().toLocaleDateString('zh-CN')}</div><div class="ri-grid">${
-    sorted.map(([meal,cnt])=>{const item=MENU.find(m=>m.zh===meal);if(!item)return'';return`<div class="ri-card"><div class="ri-emoji">${item.emoji}</div><div><div class="ri-name">${meal}</div><div class="ri-name-en">${item.en}</div></div><div class="ri-count">${cnt}</div></div>`;}).join('')
+    sorted.map(([meal,cnt])=>{const item=MENU.find(m=>m.zh===meal);if(!item)return'';const disp=item.code?`[${item.code}] ${meal}`:item.emoji+' '+meal;return`<div class="ri-card"><div class="ri-emoji">${item.emoji}</div><div><div class="ri-name">${disp}</div><div class="ri-name-en">${item.en}</div></div><div class="ri-count">${cnt}</div></div>`;}).join('')
   }</div><div style="margin-top:12px;padding:10px;background:white;border-radius:8px;font-size:13px;color:var(--text2);">合计：<strong style="color:var(--primary);">${totalItems} 份</strong> · <strong>${allOrders.length} 人</strong>${specials.length?` · <span style="color:#7c3aed;">特殊要求 ${specials.length} 条</span>`:''}</div>${specials.length?`<div style="margin-top:8px;background:white;border-radius:8px;padding:10px;font-size:12px;color:#7c3aed;"><strong>特殊要求：</strong><br>${specials.map(o=>`${o.name}: ${o.note}`).join('<br>')}</div>`:''}</div>`;
 }
 

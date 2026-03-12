@@ -161,9 +161,16 @@ const MENU=[
   {id:31,code:'L31',emoji:'🥦',zh:'什锦蔬菜',en:'Mixed Vegetable',es:'Verduras Mixtas',cat:'veg'},
   {id:32,code:'L32',emoji:'🥦',zh:'西兰花（红烧汁/蒜汁）',en:'Broccoli with Brown Sauce or Garlic Sauce',es:'Brócoli en Salsa',cat:'veg'},
   {id:33,code:'L33',emoji:'🍗',zh:'鸡翅+薯条',en:'Chicken Wing + French Fries',es:'Alitas de Pollo',cat:'other'},
+  {id:34,code:'',emoji:'🥤',zh:'可乐',en:'Coke',es:'Coca-Cola',cat:'drink'},
+  {id:35,code:'',emoji:'🥤',zh:'雪碧',en:'Sprite',es:'Sprite',cat:'drink'},
+  {id:36,code:'',emoji:'🥤',zh:'芬达',en:'Fanta',es:'Fanta',cat:'drink'},
+  {id:37,code:'',emoji:'🧋',zh:'冰茶',en:'Ice Tea',es:'Té Helado',cat:'drink'},
+  {id:38,code:'',emoji:'🍜',zh:'酸辣汤',en:'Hot & Sour Soup',es:'Sopa Agridulce',cat:'drink'},
+  {id:39,code:'',emoji:'🍳',zh:'蛋花汤',en:'Egg Drop Soup',es:'Sopa de Huevo',cat:'drink'},
+  {id:40,code:'',emoji:'🍵',zh:'味噌汤',en:'Miso Soup',es:'Sopa Miso',cat:'drink'},
 ];
 
-const CATS={all:{zh:'全部',en:'All',es:'Todo'},chicken:{zh:'🐓鸡肉',en:'🐓Chicken',es:'🐓Pollo'},beef:{zh:'🥩牛肉',en:'🥩Beef',es:'🥩Res'},pork:{zh:'🍖猪肉',en:'🍖Pork',es:'🍖Cerdo'},shrimp:{zh:'🦐虾',en:'🦐Shrimp',es:'🦐Camarones'},veg:{zh:'🥦素食',en:'🥦Veggie',es:'🥦Vegetal'},noodle:{zh:'🍜面条',en:'🍜Noodle',es:'🍜Fideos'},other:{zh:'其他',en:'Other',es:'Otros'}};
+const CATS={all:{zh:'全部',en:'All',es:'Todo'},chicken:{zh:'🐓鸡肉',en:'🐓Chicken',es:'🐓Pollo'},beef:{zh:'🥩牛肉',en:'🥩Beef',es:'🥩Res'},pork:{zh:'🍖猪肉',en:'🍖Pork',es:'🍖Cerdo'},shrimp:{zh:'🦐虾',en:'🦐Shrimp',es:'🦐Camarones'},veg:{zh:'🥦素食',en:'🥦Veggie',es:'🥦Vegetal'},noodle:{zh:'🍜面条',en:'🍜Noodle',es:'🍜Fideos'},other:{zh:'其他',en:'Other',es:'Otros'},drink:{zh:'🥤饮料&汤',en:'🥤Drinks & Soup',es:'🥤Bebidas y Sopa'}};
 
 const T={
   zh:{title:'午餐点餐',sub:'请选择今天想吃的菜',comboBanner:'🍚 每份附赠：猪肉炒饭 / 白饭 / 糙米饭\n🍜 汤选择：云吞汤 / 蛋花汤 / 酸辣汤',nameLabel:'👤 您的姓名',namePH:'输入姓名...',menuLabel:'— 今日菜单 —',specialLabel:'💬 特殊要求（可选）',specialPH:'例：不要辣，多加饭...',selCount:n=>`已选 <strong style="color:var(--primary)">${n}</strong> 道菜`,submitReady:n=>`确认点餐 · ${n}`,submitNoName:'请先输入姓名',submitNoItem:'请选择至少一道菜',sTitle:'点餐成功！',sSub:n=>`${n}，您的午餐已记录`,sOrderTitle:'您点了：',sBack:'返回',loadTxt:'提交中...',spicy:'🌶️辣'},
@@ -188,7 +195,7 @@ function renderMenu(){
   document.getElementById('menu-grid').innerHTML=items.map(item=>{
     const sel=selectedItems.includes(item.id);
     return `<div class="menu-item ${sel?'selected':''}" onclick="toggleItem(${item.id})" id="mi-${item.id}">
-      <span class="item-code">${item.code}</span>
+      ${item.code?`<span class="item-code">${item.code}</span>`:''}
       <span class="item-emoji">${item.emoji}</span>
       <div class="item-name">${item[lang]||item.en}</div>
       ${item.note?`<div class="item-note">${item.note}</div>`:''}
