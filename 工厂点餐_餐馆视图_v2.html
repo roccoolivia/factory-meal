@@ -67,31 +67,29 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans SC',sans-seri
 
 <script>
 const MENU=[
-  {id:1,code:'L1',emoji:'🍜',zh:'炒面',en:'Chow Mein'},{id:2,code:'L2',emoji:'🍝',zh:'捞面',en:'Lo Mein'},
-  {id:3,code:'L3',emoji:'🥚',zh:'芙蓉蛋',en:'Egg Foo Young'},{id:4,code:'L4',emoji:'🍗',zh:'甜酸鸡',en:'Sweet & Sour Chicken'},
-  {id:5,code:'L5',emoji:'🥦',zh:'西兰花炒鸡',en:'Chicken w. Broccoli'},{id:6,code:'L6',emoji:'🥬',zh:'什锦蔬菜鸡',en:'Chicken with Mixed Vegetable'},
-  {id:7,code:'L7',emoji:'🫘',zh:'黑豆酱鸡',en:'Chicken w. Black Bean Sauce'},{id:8,code:'L8',emoji:'🥜',zh:'腰果鸡',en:'Chicken w. Cashew Nuts'},
-  {id:9,code:'L9',emoji:'🫛',zh:'四季豆炒鸡',en:'Chicken w. String Beans'},{id:10,code:'L10',emoji:'🍗',zh:'芝麻鸡（仅限白肉）',en:'Sesame Chicken (White Meat Only)'},
-  {id:11,code:'L11',emoji:'🌶️',zh:'左宗鸡/陈皮鸡（二选一，仅限白肉）',en:"General Tso's or Orange Chicken (White Meat Only)"},{id:12,code:'L12',emoji:'🧄',zh:'蒜香鸡',en:'Chicken in Garlic Sauce'},
-  {id:13,code:'L13',emoji:'🥜',zh:'宫保鸡（配花生，辣）',en:'Kung Pao Chicken with Peanuts'},{id:14,code:'L14',emoji:'🌶️',zh:'四川/湖南鸡',en:'Szechuan / Hunan Chicken'},
-  {id:15,code:'L15',emoji:'🥦',zh:'西兰花炒叉烧',en:'Roast Pork w. Broccoli'},{id:16,code:'L16',emoji:'🥬',zh:'杂菜炒叉烧',en:'Roast Pork w. Mixed Veg'},
-  {id:17,code:'L17',emoji:'🍖',zh:'无骨排骨',en:'Boneless Spare Ribs'},{id:18,code:'L18',emoji:'🍖',zh:'BBQ排骨',en:'BBQ Spare Ribs'},
-  {id:19,code:'L19',emoji:'🥦',zh:'西兰花炒牛肉',en:'Beef w. Broccoli'},{id:20,code:'L20',emoji:'🥬',zh:'什锦蔬菜牛肉',en:'Beef with Mixed Vegetable'},
-  {id:21,code:'L21',emoji:'🧅',zh:'青椒洋葱牛肉',en:'Pepper Steak with Onion'},{id:22,code:'L22',emoji:'🫛',zh:'四季豆炒牛肉',en:'Beef w. String Bean'},
-  {id:23,code:'L23',emoji:'🧄',zh:'蒜香牛肉',en:'Beef w. Garlic Sauce'},{id:24,code:'L24',emoji:'🌶️',zh:'四川/湖南牛肉',en:'Szechuan / Hunan Beef'},
-  {id:25,code:'L25',emoji:'🥦',zh:'西兰花炒虾',en:'Shrimp w. Broccoli'},{id:26,code:'L26',emoji:'🥬',zh:'什锦蔬菜虾',en:'Shrimp with Mixed Vegetable'},
-  {id:27,code:'L27',emoji:'🦞',zh:'龙虾汁虾',en:'Shrimp with Lobster Sauce'},{id:28,code:'L28',emoji:'🫛',zh:'四季豆炒虾',en:'Shrimp w. String Bean'},
-  {id:29,code:'L29',emoji:'🧄',zh:'蒜香虾',en:'Shrimp w. Garlic Sauce'},{id:30,code:'L30',emoji:'🥜',zh:'宫保虾（配花生，辣）',en:'Kung Pao Shrimp with Peanuts'},
-  {id:31,code:'L31',emoji:'🥦',zh:'什锦蔬菜',en:'Mixed Vegetable'},{id:32,code:'L32',emoji:'🥦',zh:'西兰花（红烧汁/蒜汁）',en:'Broccoli with Brown Sauce or Garlic Sauce'},
-  {id:33,code:'L33',emoji:'🍗',zh:'鸡翅+薯条',en:'Chicken Wing + French Fries'},
-  {id:34,code:'',emoji:'🥤',zh:'可乐',en:'Coke'},{id:35,code:'',emoji:'🥤',zh:'雪碧',en:'Sprite'},
-  {id:36,code:'',emoji:'🥤',zh:'芬达',en:'Fanta'},{id:37,code:'',emoji:'🧋',zh:'冰茶',en:'Ice Tea'},
-  {id:38,code:'',emoji:'🍜',zh:'酸辣汤',en:'Hot & Sour Soup'},{id:39,code:'',emoji:'🍳',zh:'蛋花汤',en:'Egg Drop Soup'},
-  {id:40,code:'',emoji:'🍵',zh:'味噌汤',en:'Miso Soup'},
+  {id:1,code:'L1',emoji:'🍜',zh:'炒面',en:'Chow Mein',cat:'noodle'},{id:2,code:'L2',emoji:'🍝',zh:'捞面',en:'Lo Mein',cat:'noodle'},
+  {id:3,code:'L3',emoji:'🥚',zh:'芙蓉蛋',en:'Egg Foo Young',cat:'other'},{id:4,code:'L4',emoji:'🍗',zh:'甜酸鸡',en:'Sweet & Sour Chicken',cat:'chicken'},
+  {id:5,code:'L5',emoji:'🥦',zh:'西兰花炒鸡',en:'Chicken w. Broccoli',cat:'chicken'},{id:6,code:'L6',emoji:'🥬',zh:'什锦蔬菜鸡',en:'Chicken with Mixed Vegetable',cat:'chicken'},
+  {id:7,code:'L7',emoji:'🫘',zh:'黑豆酱鸡',en:'Chicken w. Black Bean Sauce',cat:'chicken'},{id:8,code:'L8',emoji:'🥜',zh:'腰果鸡',en:'Chicken w. Cashew Nuts',cat:'chicken'},
+  {id:9,code:'L9',emoji:'🫛',zh:'四季豆炒鸡',en:'Chicken w. String Beans',cat:'chicken'},{id:10,code:'L10',emoji:'🍗',zh:'芝麻鸡（仅限白肉）',en:'Sesame Chicken (White Meat Only)',cat:'chicken'},
+  {id:11,code:'L11',emoji:'🌶️',zh:'左宗鸡/陈皮鸡（二选一，仅限白肉）',en:"General Tso's or Orange Chicken (White Meat Only)",cat:'chicken'},{id:12,code:'L12',emoji:'🧄',zh:'蒜香鸡',en:'Chicken in Garlic Sauce',cat:'chicken'},
+  {id:13,code:'L13',emoji:'🥜',zh:'宫保鸡（配花生，辣）',en:'Kung Pao Chicken with Peanuts',cat:'chicken'},{id:14,code:'L14',emoji:'🌶️',zh:'四川/湖南鸡',en:'Szechuan / Hunan Chicken',cat:'chicken'},
+  {id:15,code:'L15',emoji:'🥦',zh:'西兰花炒叉烧',en:'Roast Pork w. Broccoli',cat:'pork'},{id:16,code:'L16',emoji:'🥬',zh:'杂菜炒叉烧',en:'Roast Pork w. Mixed Veg',cat:'pork'},
+  {id:17,code:'L17',emoji:'🍖',zh:'无骨排骨',en:'Boneless Spare Ribs',cat:'pork'},{id:18,code:'L18',emoji:'🍖',zh:'BBQ排骨',en:'BBQ Spare Ribs',cat:'pork'},
+  {id:19,code:'L19',emoji:'🥦',zh:'西兰花炒牛肉',en:'Beef w. Broccoli',cat:'beef'},{id:20,code:'L20',emoji:'🥬',zh:'什锦蔬菜牛肉',en:'Beef with Mixed Vegetable',cat:'beef'},
+  {id:21,code:'L21',emoji:'🧅',zh:'青椒洋葱牛肉',en:'Pepper Steak with Onion',cat:'beef'},{id:22,code:'L22',emoji:'🫛',zh:'四季豆炒牛肉',en:'Beef w. String Bean',cat:'beef'},
+  {id:23,code:'L23',emoji:'🧄',zh:'蒜香牛肉',en:'Beef w. Garlic Sauce',cat:'beef'},{id:24,code:'L24',emoji:'🌶️',zh:'四川/湖南牛肉',en:'Szechuan / Hunan Beef',cat:'beef'},
+  {id:25,code:'L25',emoji:'🥦',zh:'西兰花炒虾',en:'Shrimp w. Broccoli',cat:'shrimp'},{id:26,code:'L26',emoji:'🥬',zh:'什锦蔬菜虾',en:'Shrimp with Mixed Vegetable',cat:'shrimp'},
+  {id:27,code:'L27',emoji:'🦞',zh:'龙虾汁虾',en:'Shrimp with Lobster Sauce',cat:'shrimp'},{id:28,code:'L28',emoji:'🫛',zh:'四季豆炒虾',en:'Shrimp w. String Bean',cat:'shrimp'},
+  {id:29,code:'L29',emoji:'🧄',zh:'蒜香虾',en:'Shrimp w. Garlic Sauce',cat:'shrimp'},{id:30,code:'L30',emoji:'🥜',zh:'宫保虾（配花生，辣）',en:'Kung Pao Shrimp with Peanuts',cat:'shrimp'},
+  {id:31,code:'L31',emoji:'🥦',zh:'什锦蔬菜',en:'Mixed Vegetable',cat:'veg'},{id:32,code:'L32',emoji:'🥦',zh:'西兰花（红烧汁/蒜汁）',en:'Broccoli with Brown Sauce or Garlic Sauce',cat:'veg'},
+  {id:33,code:'L33',emoji:'🍗',zh:'鸡翅+薯条',en:'Chicken Wing + French Fries',cat:'other'},
 ];
 
 const SUPABASE_URL='https://xgoayuzekbsusyraecfx.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnb2F5dXpla2JzdXN5cmFlY2Z4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDkxODMsImV4cCI6MjA4ODQyNTE4M30.yIN4_xhpMJGndQAxTTTRY3e3JL-IFXN6UQbnOqakf3o';
+
+function isMainDish(meal){return MENU.some(m=>meal===m.zh||(m.code&&meal.startsWith(m.code+' ')));}
 
 async function load(){
   const now=new Date();
@@ -107,11 +105,16 @@ async function load(){
   }catch(e){console.error(e);}
 
   const counts={};
-  rows.forEach(r=>{counts[r.meal]=(counts[r.meal]||0)+1;});
+  const drinkMap={};
+  rows.forEach(r=>{
+    if(!isMainDish(r.meal))return;
+    counts[r.meal]=(counts[r.meal]||0)+1;
+    if(r.note){if(!drinkMap[r.meal])drinkMap[r.meal]=new Set();r.note.split(/[\/·]/).map(s=>s.trim()).filter(Boolean).forEach(d=>drinkMap[r.meal].add(d));}
+  });
   const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
   const totalItems=Object.values(counts).reduce((a,b)=>a+b,0);
   const peopleSet={};
-  rows.forEach(r=>{if(r.note)peopleSet[r.name+'|'+r.note]=r;});
+  rows.forEach(r=>{if(r.note&&r.note.includes('·'))peopleSet[r.name+'|'+r.note]=r;});
   const specials=Object.values(peopleSet);
   const peopleCnt=new Set(rows.map(r=>r.name+'|'+r.time)).size;
   const el=document.getElementById('content');
@@ -132,11 +135,14 @@ async function load(){
   </div>
   <div class="order-grid">
     ${sorted.map(([meal,cnt])=>{
-      const item=MENU.find(m=>m.zh===meal);if(!item)return'';
-      const disp=item.code?`[${item.code}] ${meal}`:item.emoji+' '+meal;return`<div class="order-card"><div class="oc-emoji">${item.emoji}</div><div><div class="oc-name">${disp}</div><div class="oc-name-en">${item.en}</div></div><div class="oc-count">${cnt}</div></div>`;
+      const item=MENU.find(m=>m.zh===meal||(m.code&&meal.startsWith(m.code+' ')));if(!item)return'';
+      const disp=item.code?`[${item.code}] ${item.zh}`:item.emoji+' '+meal;
+      const drinks=drinkMap[meal]?Array.from(drinkMap[meal]).join(' / '):'';
+      const dispFull=drinks?`${disp}（${drinks}）`:disp;
+      return`<div class="order-card"><div class="oc-emoji">${item.emoji}</div><div><div class="oc-name">${dispFull}</div><div class="oc-name-en">${item.en}</div></div><div class="oc-count">${cnt}</div></div>`;
     }).join('')}
   </div>
-  ${specials.length?`<div class="special-box"><div class="special-title">⚠️ 特殊要求 · Special Requests</div>${specials.map(o=>`<div class="special-item"><strong>${o.name}</strong>：${o.note}</div>`).join('')}</div>`:''}`;
+  ${specials.length?`<div class="special-box"><div class="special-title">⚠️ 特殊要求 · Special Requests</div>${specials.map(o=>`<div class="special-item"><strong>${o.name}</strong>：${o.note.split(' · ')[1]||o.note}</div>`).join('')}</div>`:''}`;
 }
 
 async function init(){

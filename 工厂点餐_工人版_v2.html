@@ -178,9 +178,9 @@ const DRINKS=[
 const CATS={all:{zh:'全部',en:'All',es:'Todo'},chicken:{zh:'🐓鸡肉',en:'🐓Chicken',es:'🐓Pollo'},beef:{zh:'🥩牛肉',en:'🥩Beef',es:'🥩Res'},pork:{zh:'🍖猪肉',en:'🍖Pork',es:'🍖Cerdo'},shrimp:{zh:'🦐虾',en:'🦐Shrimp',es:'🦐Camarones'},veg:{zh:'🥦素食',en:'🥦Veggie',es:'🥦Vegetal'},noodle:{zh:'🍜面条',en:'🍜Noodle',es:'🍜Fideos'},other:{zh:'其他',en:'Other',es:'Otros'}};
 
 const T={
-  zh:{title:'午餐点餐',sub:'请选择今天想吃的菜',drinkLabel:'— 🥤 饮料 / 汤 / 饭 —',nameLabel:'👤 您的姓名',namePH:'输入姓名...',menuLabel:'— 今日菜单 —',specialLabel:'💬 特殊要求（可选）',specialPH:'例：不要辣，多加饭...',selCount:n=>`已选 <strong style="color:var(--primary)">${n}</strong> 道菜`,submitReady:n=>`确认点餐 · ${n}`,submitNoName:'请先输入姓名',submitNoItem:'请选择至少一道菜',sTitle:'点餐成功！',sSub:n=>`${n}，您的午餐已记录`,sOrderTitle:'您点了：',sBack:'返回',loadTxt:'提交中...',spicy:'🌶️辣'},
-  en:{title:'Lunch Order',sub:'Select your lunch items',drinkLabel:'— 🥤 Drinks / Soup / Rice —',nameLabel:'👤 Your Name',namePH:'Enter your name...',menuLabel:"— Today's Menu —",specialLabel:'💬 Special Request (optional)',specialPH:'e.g. No spicy, extra rice...',selCount:n=>`<strong style="color:var(--primary)">${n}</strong> item${n!==1?'s':''} selected`,submitReady:n=>`Place Order · ${n}`,submitNoName:'Please enter your name',submitNoItem:'Please select at least one item',sTitle:'Order Placed!',sSub:n=>`${n}, your lunch is recorded`,sOrderTitle:'You ordered:',sBack:'Back',loadTxt:'Submitting...',spicy:'🌶️Spicy'},
-  es:{title:'Orden de Almuerzo',sub:'Selecciona tus platos',drinkLabel:'— 🥤 Bebidas / Sopa / Arroz —',nameLabel:'👤 Tu Nombre',namePH:'Ingresa tu nombre...',menuLabel:'— Menú de Hoy —',specialLabel:'💬 Solicitud Especial (opcional)',specialPH:'Ej: Sin picante, más arroz...',selCount:n=>`<strong style="color:var(--primary)">${n}</strong> plato${n!==1?'s':''} seleccionado${n!==1?'s':''}`,submitReady:n=>`Confirmar · ${n}`,submitNoName:'Ingresa tu nombre',submitNoItem:'Selecciona al menos un plato',sTitle:'¡Orden Confirmada!',sSub:n=>`${n}, tu almuerzo está registrado`,sOrderTitle:'Tu orden:',sBack:'Volver',loadTxt:'Enviando...',spicy:'🌶️Picante'},
+  zh:{title:'午餐点餐',sub:'请选择今天想吃的菜',drinkLabel:'— 🥤 饮料 / 汤 / 饭 —',nameLabel:'👤 您的姓名',namePH:'输入姓名...',menuLabel:'— 今日菜单 —',specialLabel:'💬 特殊要求（可选）',specialPH:'例：不要辣，多加饭...',selCount:n=>`已选 <strong style="color:var(--primary)">${n}</strong> 道菜`,submitReady:n=>`确认点餐 · ${n}`,submitNoName:'请先输入姓名',submitNoItem:'请选择至少一道菜',submitNoMain:'请先选择至少一道主菜',sTitle:'点餐成功！',sSub:n=>`${n}，您的午餐已记录`,sOrderTitle:'您点了：',sBack:'返回',loadTxt:'提交中...',spicy:'🌶️辣'},
+  en:{title:'Lunch Order',sub:'Select your lunch items',drinkLabel:'— 🥤 Drinks / Soup / Rice —',nameLabel:'👤 Your Name',namePH:'Enter your name...',menuLabel:"— Today's Menu —",specialLabel:'💬 Special Request (optional)',specialPH:'e.g. No spicy, extra rice...',selCount:n=>`<strong style="color:var(--primary)">${n}</strong> item${n!==1?'s':''} selected`,submitReady:n=>`Place Order · ${n}`,submitNoName:'Please enter your name',submitNoItem:'Please select at least one item',submitNoMain:'Please select at least one main dish first',sTitle:'Order Placed!',sSub:n=>`${n}, your lunch is recorded`,sOrderTitle:'You ordered:',sBack:'Back',loadTxt:'Submitting...',spicy:'🌶️Spicy'},
+  es:{title:'Orden de Almuerzo',sub:'Selecciona tus platos',drinkLabel:'— 🥤 Bebidas / Sopa / Arroz —',nameLabel:'👤 Tu Nombre',namePH:'Ingresa tu nombre...',menuLabel:'— Menú de Hoy —',specialLabel:'💬 Solicitud Especial (opcional)',specialPH:'Ej: Sin picante, más arroz...',selCount:n=>`<strong style="color:var(--primary)">${n}</strong> plato${n!==1?'s':''} seleccionado${n!==1?'s':''}`,submitReady:n=>`Confirmar · ${n}`,submitNoName:'Ingresa tu nombre',submitNoItem:'Selecciona al menos un plato',submitNoMain:'Selecciona al menos un plato principal',sTitle:'¡Orden Confirmada!',sSub:n=>`${n}, tu almuerzo está registrado`,sOrderTitle:'Tu orden:',sBack:'Volver',loadTxt:'Enviando...',spicy:'🌶️Picante'},
 };
 
 let lang='zh',selectedItems=[],workerName='',currentCat='all';
@@ -236,8 +236,10 @@ function onNameInput(){workerName=document.getElementById('name-input').value.tr
 
 function updateSubmitBtn(){
   const btn=document.getElementById('submit-btn');const txt=document.getElementById('submit-txt');const t=T[lang];
+  const mainIds=selectedItems.filter(id=>id>=1&&id<=33);
   if(!workerName){btn.disabled=true;txt.textContent=t.submitNoName;}
   else if(!selectedItems.length){btn.disabled=true;txt.textContent=t.submitNoItem;}
+  else if(!mainIds.length){btn.disabled=true;txt.textContent=t.submitNoMain;}
   else{btn.disabled=false;txt.textContent=t.submitReady(workerName);}
 }
 
@@ -247,13 +249,20 @@ function getItem(id){return MENU.find(m=>m.id===id)||DRINKS.find(d=>d.id===id);}
 
 async function submitOrder(){
   if(!workerName||!selectedItems.length)return;
-  const items=selectedItems.map(id=>getItem(id)).filter(Boolean);
+  const mainIds=selectedItems.filter(id=>id>=1&&id<=33);
+  if(!mainIds.length){showToast(T[lang].submitNoMain);return;}
+  const mainItems=mainIds.map(id=>MENU.find(m=>m.id===id)).filter(Boolean);
+  const drinkItems=selectedItems.filter(id=>id>=34&&id<=43).map(id=>DRINKS.find(d=>d.id===id)).filter(Boolean);
+  const drinkStr=drinkItems.map(d=>d.zh).join(' / ');
   const special=document.getElementById('special-input').value.trim();
+  const noteParts=[drinkStr,special].filter(Boolean);
+  const note=noteParts.length?noteParts.join(' · '):null;
   const url='https://xgoayuzekbsusyraecfx.supabase.co/rest/v1/orders';
   const key='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhnb2F5dXpla2JzdXN5cmFlY2Z4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI4NDkxODMsImV4cCI6MjA4ODQyNTE4M30.yIN4_xhpMJGndQAxTTTRY3e3JL-IFXN6UQbnOqakf3o';
   document.getElementById('loading').classList.add('show');
   try{
-    for(const i of items){
+    for(const i of mainItems){
+      const mealStr=i.code?i.code+' '+i.zh:i.zh;
       const res=await fetch(url,{
         method:'POST',
         headers:{
@@ -264,10 +273,10 @@ async function submitOrder(){
         },
         body:JSON.stringify({
           name:workerName,
-          meal:i.zh,
+          meal:mealStr,
           meal_en:i.en,
           emoji:i.emoji,
-          note:special||null,
+          note:note,
           date:new Date().toLocaleDateString('zh-CN'),
           time:new Date().toLocaleTimeString('zh-CN'),
           status:'pending'
@@ -276,18 +285,20 @@ async function submitOrder(){
       if(!res.ok){const err=await res.text();throw new Error(err);}
     }
     document.getElementById('loading').classList.remove('show');
-    showSuccess(workerName,items,special);
+    showSuccess(workerName,mainItems,drinkItems,special);
   }catch(e){
     document.getElementById('loading').classList.remove('show');
     showToast('提交失败: '+e.message);
   }
 }
 
-function showSuccess(name,items,special){
+function showSuccess(name,mainItems,drinkItems,special){
   const t=T[lang];
   document.getElementById('s-title').textContent=t.sTitle;
   document.getElementById('s-sub').textContent=t.sSub(name);
-  document.getElementById('s-order').innerHTML=`<div class="s-order-title">${t.sOrderTitle}</div>`+items.map(i=>`<div class="s-order-item">${i.emoji} ${i[lang]||i.en}</div>`).join('')+(special?`<div class="s-order-item" style="color:#666;font-size:11px;">💬 ${special}</div>`:'');
+  const mainLines=mainItems.map(i=>`<div class="s-order-item">${i.emoji} ${i.code?i.code+' ':''}${i[lang]||i.en}${drinkItems.length?`（${drinkItems.map(d=>d.zh).join(' / ')}）`:''}</div>`);
+  const specialLine=special?`<div class="s-order-item" style="color:#666;font-size:11px;">💬 ${special}</div>`:'';
+  document.getElementById('s-order').innerHTML=`<div class="s-order-title">${t.sOrderTitle}</div>`+mainLines.join('')+specialLine;
   document.getElementById('success-screen').classList.add('show');
 }
 
